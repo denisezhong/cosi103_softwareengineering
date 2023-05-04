@@ -1,0 +1,18 @@
+<h1>Transactions for <%= user.username %></h1>
+<p>Transactions Grouped by Category</p>
+
+
+<div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr><th>category</th><th>amount</th</tr>
+      </thead>
+      <tbody>
+        <% transactions.forEach(transaction => { %>
+            <tr>
+                <td><%= transaction.category %></td>
+                <td><%= transaction.amount %></td>
+            </tr><% }); %>
+      </tbody>
+    </table>
+  </div>
