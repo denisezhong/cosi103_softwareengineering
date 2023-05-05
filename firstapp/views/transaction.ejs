@@ -1,3 +1,7 @@
+<!--Formating for Transactions Page-->
+
+
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
 
 <h1>Transactions for <%= user.username %></h1>
@@ -11,7 +15,7 @@
     <button 
         onclick="location.href='transaction?sortBy=amount'">sort by amount</button>
     <button 
-        onclick="location.href='transaction?sortBy=item'">sort by item</button>
+        onclick="location.href='transaction?sortBy=item'">sort by description</button>
     <button 
         onclick="location.href='transaction?sortBy=date'">sort by date</button>
 </div>
@@ -38,7 +42,7 @@
                     <td><%= transaction.amount %></td>
                     <td><%= transaction.category %></td>
                     <td><%= transaction.date %></td>
-                    <td><a href='/transaction/delete/<%= transaction._id %>'>
+                    <td><a href='/transaction/remove/<%= transaction._id %>'>
                             <i class="bi bi-trash"></i></a>
                     </td><td><a href='/transaction/edit/<%= transaction._id %>'>
                             <i class="bi bi-pencil-square"></i></a>

@@ -41,7 +41,8 @@ isLoggedIn = (req,res,next) => {
         const transaction = new Transaction(
           {
             userId: req.user._id,
-            description: req.body.desctription,
+            description: req.body.description,
+            item: req.body.item,
             amount: req.body.amount,
             category: req.body.category,
             date: new Date(req.body.date)
@@ -50,10 +51,10 @@ isLoggedIn = (req,res,next) => {
         res.redirect('/transaction')
   });
   
-  router.get('/transaction/delete/:itemId',
+  router.get('/transaction/remove/:itemId',
     isLoggedIn,
     async (req, res, next) => {
-        console.log("inside /transaction/delete/:itemId")
+        console.log("inside /transaction/remove/:itemId")
         await Transaction.deleteOne({_id:req.params.itemId});
         res.redirect('/transaction')
   });
@@ -87,16 +88,21 @@ isLoggedIn = (req,res,next) => {
       console.log(sortBy);
      
       if (sortBy === 'description') {
-        res.locals.transaction = await Transaction.find({userId:req.user._id}).sort({ description: 'asc' });
+        res.locals.transaction = await Transaction.find({userId:req.user._id})
+                                                  .sort({ description: 'asc' });
       } else if (sortBy === 'item') {
-        res.locals.transactions = await Transaction.find({userId:req.user._id}).sort({ item: 'asc' });
+        res.locals.transactions = await Transaction.find({userId:req.user._id})
+                                                    .sort({ item: 'asc' });
       } 
       else if (sortBy === 'amount') {
-        res.locals.transactions = await Transaction.find({userId:req.user._id}).sort({ amount: 'asc' });
+        res.locals.transactions = await Transaction.find({userId:req.user._id})
+                                                    .sort({ amount: 'asc' });
       }else if (sortBy === 'category') {
-        res.locals.transactions = await Transaction.find({userId:req.user._id}).sort({ category: 'asc' });
+        res.locals.transactions = await Transaction.find({userId:req.user._id})
+                                                    .sort({ category: 'asc' });
       } else if (sortBy == 'date'){
-        res.locals.transactions = await Transaction.find({userId:req.user._id}).sort({ date: 'asc' });
+        res.locals.transactions = await Transaction.find({userId:req.user._id})
+                                                    .sort({ date: 'asc' });
       } else {
         res.locals.transactions = await Transaction.find({ userId: req.user._id });
       }
@@ -118,14 +124,14 @@ isLoggedIn = (req,res,next) => {
 
 
   
-  router.post('/todo/updateTransaction',
+  router.post('/transaction/update',
     isLoggedIn,
     async (req, res, next) => {
         const {itemId,item,priority} = req.body;
         console.log("inside /updateTransaction/:itemId");
         await Transaction.findOneAndUpdate(
           {_id:itemId},
-          {$set: {item,priority}} );
+          {$set: {description, item, category, amount, date}} );
         res.redirect('/transaction')
   });
   
