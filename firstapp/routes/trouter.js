@@ -1,9 +1,10 @@
 //router for transactionapp
 
 const express = require('express');
-const bodyParser = require('body-parser');
+//const bodyParser = require('body-parser');
 const router = express.Router();
 const Transaction = require('../models/Transaction');
+const Category = require('../models/Category');
 
 
 isLoggedIn = (req,res,next) => {
@@ -42,9 +43,8 @@ isLoggedIn = (req,res,next) => {
           {
             userId: req.user._id,
             description: req.body.description,
-            item: req.body.item,
-            amount: req.body.amount,
             category: req.body.category,
+            amount: req.body.amount,
             date: new Date(req.body.date)
           })
         await transaction.save();
@@ -64,10 +64,10 @@ isLoggedIn = (req,res,next) => {
   async (req, res, next) => {
       console.log("inside /transaction/edit")
       const item = 
-       await Transaction.findById(req.params.itemId);
+       await Transaction.findById({_id:req.params.itemId});
       //res.render('edit', { item });
       res.locals.item = item
-      res.render('edit')
+      res.render('edittransaction')
       //res.json(item)
 });
 
@@ -75,10 +75,47 @@ isLoggedIn = (req,res,next) => {
   isLoggedIn,
   async (req, res, next) => {
     console.log("inside /transaction/groupByCategories");
-    await Transaction.sort({ category: 'asc' });
+    res.locals.transactions = await Transaction.find({userId:req.user._id}).sort({ category: 'asc' });
+    const sumAmount = {};
+    res.locals.transactions.forEach(transaction => {
+      if (!sumAmount[transaction.category]) {
+        sumAmount[transaction.category] = 0;
+      }
+      sumAmount[transaction.category] += transaction.amount;
+    });
+    const categories = Object.keys(sumAmount);
+    res.render('category', { categories, sumAmount });
+  });
+
+    //res.locals.categories = await Category.find({userId:req.user._id})
+    //res.render('category');
     //res.render('transaction');
-    res.render('category')
+    //res.render('category')
+  //});
+/*
+  router.get('/transaction/category',
+  isLoggedIn,
+  async (req, res, next) => {
+    console.log("inside /transaction/groupByCategories");
+      let results =
+            await Transaction.aggregate(
+                [ 
+                  {$group:{
+                    category:'$category',
+                    amount:{$amount:{}}
+                    }},
+                  {$sort:{total:-1}},              
+                ])
+              
+        results = 
+           await Transaction.populate(results,
+                   {path:'_id',
+                   select:['category']})
+
+        //res.json(results)
+        res.render('category',{results})
 });
+*/
 
   
   router.get('/transaction',
@@ -87,12 +124,12 @@ isLoggedIn = (req,res,next) => {
       const sortBy = req.query.sortBy;
       console.log(sortBy);
      
-      if (sortBy === 'description') {
-        res.locals.transaction = await Transaction.find({userId:req.user._id})
-                                                  .sort({ description: 'asc' });
-      } else if (sortBy === 'item') {
+      if (sortBy === 'item') {
         res.locals.transactions = await Transaction.find({userId:req.user._id})
-                                                    .sort({ item: 'asc' });
+                                                  .sort({ item: 'asc' });
+      } else if (sortBy === 'description') {
+        res.locals.transactions = await Transaction.find({userId:req.user._id})
+                                                    .sort({ description: 'asc' });
       } 
       else if (sortBy === 'amount') {
         res.locals.transactions = await Transaction.find({userId:req.user._id})
@@ -124,14 +161,16 @@ isLoggedIn = (req,res,next) => {
 
 
   
-  router.post('/transaction/update',
+  router.post('/transaction/updateTransaction',
     isLoggedIn,
     async (req, res, next) => {
-        const {itemId,item,priority} = req.body;
+        const {itemId, description, category, amount, date} = req.body;
         console.log("inside /updateTransaction/:itemId");
         await Transaction.findOneAndUpdate(
-          {_id:itemId},
-          {$set: {description, item, category, amount, date}} );
+          {_id: itemId},
+          {$set: {description, category, amount, date}} 
+          );
+        console.log("inside /transaction/updatePart2");
         res.redirect('/transaction')
   });
   

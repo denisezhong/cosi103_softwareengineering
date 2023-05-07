@@ -15,7 +15,7 @@
     <button 
         onclick="location.href='transaction?sortBy=amount'">sort by amount</button>
     <button 
-        onclick="location.href='transaction?sortBy=item'">sort by description</button>
+        onclick="location.href='transaction?sortBy=description'">sort by description</button>
     <button 
         onclick="location.href='transaction?sortBy=date'">sort by date</button>
 </div>
@@ -24,9 +24,7 @@
     <table class="table">
         <thead> <tr>
             <th></th>
-            <th>item</th> 
             <th>description</th>
-            
             <th>amount</th>
             <th>category</th>
             <th>date</th>
@@ -36,9 +34,7 @@
         <tbody>
             <% transactions.forEach(transaction => { %>
                 <tr><td> </td>
-                    <td><%= transactions.item %></td>
-                    <td><%= transactions.des %></td>
-                    
+                    <td><%= transaction.description %></td>
                     <td><%= transaction.amount %></td>
                     <td><%= transaction.category %></td>
                     <td><%= transaction.date %></td>
@@ -53,8 +49,7 @@
 
 <h1>Add New Transaction</h1>
 <form method="post" action="transaction">
-    item: <input type="text" name="item"><br>
-    description: <input type="text" name="des"><br>
+    description: <input type="text" name="description"><br>
     category: <input type="text" name="category" ><br>
     amount: <input type="number" name="amount" ><br>
     date: <input type="date" name="date" ><br>

@@ -1,3 +1,4 @@
+
 <h1>Transactions for <%= user.username %></h1>
 <p>Transactions Grouped by Category</p>
 
@@ -8,10 +9,10 @@
         <tr><th>category</th><th>amount</th</tr>
       </thead>
       <tbody>
-        <% transactions.forEach(transaction => { %>
+        <% categories.forEach(category => { %>
             <tr>
-                <td><%= transaction.category %></td>
-                <td><%= transaction.amount %></td>
+                <td><%= category %></td>
+                <td><%= sumAmount[category] %></td>
             </tr><% }); %>
       </tbody>
     </table>

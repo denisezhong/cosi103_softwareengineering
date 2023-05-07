@@ -1,6 +1,5 @@
-<!--
 <pre>
-    <%= JSON.stringify(item,null,5) %>
+    <%= JSON.stringify() %>
 </pre>
 <form method="post" action="/todo/updateTodoItem">
     <input type="hidden" name="itemId" value="<%= item._id %>">
@@ -17,18 +16,5 @@
        <% }) %>
     </select>
     <br>
-    <input type="submit" value="store">
-</form> 
--->
-<h1>Edit Transaction</h1>
-<pre>
-    <%= JSON.stringify(item,null,5) %>
-</pre>
-<form method="post" action="/todo/updateTransaction">
-    item: <input type="text" name="item"><br>
-    description: <input type="text" name="des"><br>
-    category: <input type="text" name="category" ><br>
-    amount: <input type="number" name="amount" ><br>
-    date: <input type="date" name="date" ><br>
     <input type="submit" value="store">
 </form>
